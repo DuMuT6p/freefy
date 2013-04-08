@@ -1,0 +1,23 @@
+#!/bin/bash
+# FREEFY
+# A simple script to add a header to a file 
+# Intended use is for adding a open source licence headers to files
+# Use: freefy foo - adds GPLv3 header to current directory and copies licence file to current directory
+E_NOARGS=85
+if [ -z "$1" ]; then
+	echo "freefy:missing file operand";
+	exit $E_NOARGS;
+fi
+filelist=(`ls`)
+len=${#filelist[*]}
+echo "len = $len"
+i=0
+while [ $i -lt $len ]; do
+	if [ -f ${filelist[$i]} ]; then
+	echo "$i: ${array[$i]}"
+	cat ./licences/GPLv3-header.txt ${filelist[$i]} > temp
+	mv temp ${filelist[$i]}
+	fi
+let i++
+done
+exit 0
