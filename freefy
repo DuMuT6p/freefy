@@ -3,21 +3,32 @@
 # A simple script to add a header to a file 
 # Intended use is for adding a open source licence headers to files
 # Use: freefy foo - adds GPLv3 header to current directory and copies licence file to current directory
+
+# Set error codes
 E_NOARGS=85
+
+# Check command line arguments
 if [ -z "$1" ]; then
 	echo "freefy:missing file operand";
 	exit $E_NOARGS;
 fi
-filelist=(`ls`)
-len=${#filelist[*]}
-echo "len = $len"
+
+# Get the list of files in the current directory and its length
+file_list=(`ls`)
+file_list_length=${#file_list[*]}
+
+echo "length = $file_list_length" #DEBUG
+
+# Concatenate a header at the top of each file in the list (ex. directories, links, etc.)
 i=0
-while [ $i -lt $len ]; do
-	if [ -f ${filelist[$i]} ]; then
-	echo "$i: ${array[$i]}"
-	cat ./licences/GPLv3-header.txt ${filelist[$i]} > temp
-	mv temp ${filelist[$i]}
+while [ $i -lt $file_list_length ]; do
+	if [ -f ${file_list[$i]} ]; then
+	echo "$i: ${array[$i]}" #DEBUG
+	cat ./licences/GPLv3-header.txt ${file_list[$i]} > temp
+	mv temp ${file_list[$i]}
 	fi
 let i++
 done
+
+# Exit OK
 exit 0
