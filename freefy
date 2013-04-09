@@ -9,6 +9,8 @@ licence=GPLv3
 header=./licences/$licence-header.txt
 year=(`date +%Y`)
 
+installed_directory=./
+
 # Set error codes
 E_NOARGS=85
 
@@ -38,7 +40,7 @@ let i++
 done
 
 # Copy licence file to current directory
-cp ./licences/$licence.txt ./$licence.txt
+cp $installed_directory/licences/$licence.txt ./$licence.txt
 
 # Exit OK
 exit 0
