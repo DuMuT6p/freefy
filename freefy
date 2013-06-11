@@ -4,8 +4,8 @@
 # Intended use is for adding a open source licence headers to files
 # Use: freefy foo - adds GPLv3 header with the program name foo to current directory and copies licence file to current directory
 
-# Set variables
-licence=GPLv3
+# Set default variables
+license=GPLv3
 header=./licences/$licence-header.txt
 year=(`date +%Y`)
 
@@ -28,13 +28,14 @@ echo "length = $file_list_length" #DEBUG
 echo "year = $year" #DEBUG
 echo "program name = $1"
 
-# Concatenate a header at the top of each file in the list (ex. directories, links, etc.)
+# Concatenate a header at the top of each file in the list (excluding directories, links, etc.)
 i=0
 while [ $i -lt $file_list_length ]; do
 	if [ -f ${file_list[$i]} ]; then
-	echo "$i: ${array[$i]}" #DEBUG
+	echo "File $i: ${file_list[$i]}" #DEBUG
 	cat $header ${file_list[$i]} > temp
 	mv temp ${file_list[$i]}
+	sed -i 's/<program>/'$1'/g;s/<author>/'$2'/g;s/<year>/'$year'/g' ${file_list[$i]}
 	fi
 let i++
 done
