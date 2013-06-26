@@ -1,21 +1,47 @@
 #!/bin/bash
 # FREEFY
 # A simple script to add a header to a file 
-# Intended use is for adding a open source licence headers to files
-# Use: freefy foo - adds GPLv3 header with the program name foo to current directory and copies licence file to current directory
+# Use: freefy foo bar - adds GPL version 3 header with the program name set to 'foo' and program author set to 'bar' to all files in current directory and copies the full license file to the current directory
 
 # Set default variables
 license=GPLv3
-header=./licences/$licence-header.txt
+header=./licenses/$license-header.txt #DEBUG: change for release
 year=(`date +%Y`)
 
-installed_directory=./
+installed_directory=/home/imperium/Desktop/freefy     #DEBUG: change for release
 
 # Set error codes
 E_NOARGS=85
 
-# Check command line arguments
-if [ -z "$1" ]; then		# The first argument is $1 is the name of the program
+# Check command line options
+while getopts "hpy:l:" opt; do
+  case $opt in
+  h)
+    cat $installed_directory/licenses/README
+    exit 0
+  ;;
+  p)
+    ls $installed_directory/licenses/ 
+    exit 0
+  ;;
+  y)
+    year=$OPTARG
+  ;;
+  l)
+    license=$OPTARG
+  ;;
+  \?)
+    echo "Unknown option" >&2 
+    exit 1
+  ;;
+  esac
+done
+
+echo "OPTIND = $OPTIND " 
+shift {$OPTIND-1}
+
+# Check for required arguments
+if [ -z "$1" && -z $2]; then		# The first argument $1 is the name of the program, second is the program author
 	echo "freefy:missing file operand";
 	exit $E_NOARGS;
 fi
@@ -26,7 +52,9 @@ file_list_length=${#file_list[*]}
 
 echo "length = $file_list_length" #DEBUG
 echo "year = $year" #DEBUG
+echo "license = $license" #DEBUG
 echo "program name = $1"
+echo "program author = $2"
 
 # Concatenate a header at the top of each file in the list (excluding directories, links, etc.)
 i=0
@@ -40,8 +68,8 @@ while [ $i -lt $file_list_length ]; do
 let i++
 done
 
-# Copy licence file to current directory
-cp $installed_directory/licences/$licence.txt ./$licence.txt
+# Copy license file to current directory
+cp $installed_directory/licenses/$license.txt ./LICENSE
 
 # Exit OK
 exit 0
