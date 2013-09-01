@@ -4,10 +4,9 @@
 # Use: freefy foo bar - adds GPL version 3 header with the program name set to 'foo' and program author set to 'bar' to all files in current directory and copies the full license file to the current directory
 
 # Set default variables
-license=GPLv3
+license=ApacheLicense_v2
 year=(`date +%Y`)
 installed_directory=/home/imperium/Desktop/freefy     #DEBUG: change for release
-header=$installed_directory/licenses/$license-header.txt #DEBUG: change for release
 
 # Set error codes
 E_NOARGS=85
@@ -18,11 +17,11 @@ E_ERROR=1
 while getopts ":hpy:l:" opt; do
   case $opt in
   h)
-    cat $installed_directory/licenses/README          #DEBUG: change for release
+    cat $installed_directory/settings/README          
     exit $E_OK
   ;;
   p)
-    ls $installed_directory/licenses/ 
+    cat $installed_directory/settings/LIST
     exit $E_OK
   ;;
   y)
@@ -38,16 +37,14 @@ while getopts ":hpy:l:" opt; do
   esac
 done
 
-echo "OPTIND = $OPTIND "  #DEBUG 
-shift $(($OPTIND-1))      # Shift the command line marker by some positions, evaluated by processed options by getopts - 1
+# Shift the command line marker by some positions, evaluated by processed options by getopts - 1
+shift $(($OPTIND-1))
 
-#echo "year = $year"       #DEBUG
-#echo "license = $license" #DEBUG
 echo "program name = $1"
 echo "program author = $2"
 
 # Check for required arguments
-if [ -z "$1" ] || [ -z "$2"] ; then		# The first argument $1 is the name of the program, second is the program author
+if [ -z "$1" ] || [ -z "$2" ] ; then		# The first argument $1 is the name of the program, second is the program author
 	echo "freefy:missing file operand";
 	exit $E_NOARGS;
 fi
@@ -56,13 +53,13 @@ fi
 file_list=(`ls`)
 file_list_length=${#file_list[*]}
 
-#echo "length = $file_list_length" #DEBUG
+# Get header for specifyed license
+header=$installed_directory/licenses/$license-header.txt 
 
 # Concatenate a header at the top of each file in the list (excluding directories, links, etc.)
 i=0
 while [ $i -lt $file_list_length ]; do
   if [ -f ${file_list[$i]} ]; then
-#  echo "File $i: ${file_list[$i]}" #DEBUG
   cat $header ${file_list[$i]} > temp
   mv temp ${file_list[$i]}
   sed -i 's/<program>/'$1'/g;s/<author>/'$2'/g;s/<year>/'$year'/g' ${file_list[$i]}
