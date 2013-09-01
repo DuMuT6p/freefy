@@ -5,24 +5,25 @@
 
 # Set default variables
 license=GPLv3
-header=./licenses/$license-header.txt #DEBUG: change for release
 year=(`date +%Y`)
-
 installed_directory=/home/imperium/Desktop/freefy     #DEBUG: change for release
+header=$installed_directory/licenses/$license-header.txt #DEBUG: change for release
 
 # Set error codes
 E_NOARGS=85
+E_OK=0
+E_ERROR=1
 
 # Check command line options
-while getopts "hpy:l:" opt; do
+while getopts ":hpy:l:" opt; do
   case $opt in
   h)
-    cat $installed_directory/licenses/README
-    exit 0
+    cat $installed_directory/licenses/README          #DEBUG: change for release
+    exit $E_OK
   ;;
   p)
     ls $installed_directory/licenses/ 
-    exit 0
+    exit $E_OK
   ;;
   y)
     year=$OPTARG
@@ -31,17 +32,22 @@ while getopts "hpy:l:" opt; do
     license=$OPTARG
   ;;
   \?)
-    echo "Unknown option" >&2 
-    exit 1
+    echo "Unknown option. Try 'freefy -h' for more information." >&2 
+    exit $E_ERROR
   ;;
   esac
 done
 
-echo "OPTIND = $OPTIND " 
-shift {$OPTIND-1}
+echo "OPTIND = $OPTIND "  #DEBUG 
+shift $(($OPTIND-1))      # Shift the command line marker by some positions, evaluated by processed options by getopts - 1
+
+#echo "year = $year"       #DEBUG
+#echo "license = $license" #DEBUG
+echo "program name = $1"
+echo "program author = $2"
 
 # Check for required arguments
-if [ -z "$1" && -z $2]; then		# The first argument $1 is the name of the program, second is the program author
+if [ -z "$1" ] || [ -z "$2"] ; then		# The first argument $1 is the name of the program, second is the program author
 	echo "freefy:missing file operand";
 	exit $E_NOARGS;
 fi
@@ -50,21 +56,17 @@ fi
 file_list=(`ls`)
 file_list_length=${#file_list[*]}
 
-echo "length = $file_list_length" #DEBUG
-echo "year = $year" #DEBUG
-echo "license = $license" #DEBUG
-echo "program name = $1"
-echo "program author = $2"
+#echo "length = $file_list_length" #DEBUG
 
 # Concatenate a header at the top of each file in the list (excluding directories, links, etc.)
 i=0
 while [ $i -lt $file_list_length ]; do
-	if [ -f ${file_list[$i]} ]; then
-	echo "File $i: ${file_list[$i]}" #DEBUG
-	cat $header ${file_list[$i]} > temp
-	mv temp ${file_list[$i]}
-	sed -i 's/<program>/'$1'/g;s/<author>/'$2'/g;s/<year>/'$year'/g' ${file_list[$i]}
-	fi
+  if [ -f ${file_list[$i]} ]; then
+#  echo "File $i: ${file_list[$i]}" #DEBUG
+  cat $header ${file_list[$i]} > temp
+  mv temp ${file_list[$i]}
+  sed -i 's/<program>/'$1'/g;s/<author>/'$2'/g;s/<year>/'$year'/g' ${file_list[$i]}
+  fi
 let i++
 done
 
@@ -72,4 +74,4 @@ done
 cp $installed_directory/licenses/$license.txt ./LICENSE
 
 # Exit OK
-exit 0
+exit $E_OK
