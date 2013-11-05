@@ -4,9 +4,9 @@
 # Use: freefy foo bar - adds GPL version 3 header with the program name set to 'foo' and program author set to 'bar' to all files in current directory and copies the full license file to the current directory
 
 # Set default variables
-license=ApacheLicense_v2
+license=GPLv3
 year=(`date +%Y`)
-installed_directory=/home/imperium/Desktop/freefy     #DEBUG: change for release
+installed_directory=/usr/share/freefy
 
 # Set error codes
 E_NOARGS=85
@@ -17,11 +17,11 @@ E_ERROR=1
 while getopts ":hpy:l:" opt; do
   case $opt in
   h)
-    cat $installed_directory/settings/README          
+    cat $installed_directory/README          
     exit $E_OK
   ;;
   p)
-    cat $installed_directory/settings/LIST
+    cat $installed_directory/LIST
     exit $E_OK
   ;;
   y)
@@ -40,14 +40,14 @@ done
 # Shift the command line marker by some positions, evaluated by processed options by getopts - 1
 shift $(($OPTIND-1))
 
-echo "program name = $1"
-echo "program author = $2"
-
 # Check for required arguments
 if [ -z "$1" ] || [ -z "$2" ] ; then		# The first argument $1 is the name of the program, second is the program author
-	echo "freefy:missing file operand";
+	echo "freefy:missing file operand"  >&2;
 	exit $E_NOARGS;
 fi
+
+echo "Program name will be set to: $1"    
+echo "Program author will be set to: $2"  
 
 # Get the list of files in the current directory and its length
 file_list=(`ls`)
