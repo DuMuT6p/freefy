@@ -1,0 +1,5 @@
+New options
+-e {extension} - Only for files with specified extension
+-r - Recursively execute in all subdirectories
+-x {exclude directory} - Exclude specified directory (Probably use "ls --hide PATERN" )
+

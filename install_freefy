@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mv ./freefy /usr/local/bin
+mkdir /usr/share/freefy
+mv ./README ./LIST ./licenses /usr/share/freefy
