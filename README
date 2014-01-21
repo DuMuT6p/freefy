@@ -1,12 +1,13 @@
-freefy version 0.6.0 - Add a FOSS license to a program
+freefy version 0.6.0 - Add a FOSS license to a program`s source files
 
 Usage: freefy PROGRAMNAME PROGRAMAUTHOR [-y YEAR] [-l LICENSE]
-Add the GPLv3 header to all files in the current directory, specifying PROGRAMNAME and PROGRAMAUTHOR. 
-The full license is also copied to the current directory in the file LICENSE.
+
+Add a header to all files in the current directory, replacing PROGRAMNAME and PROGRAMAUTHOR. 
+The full license is also copied to the current directory in a file with name LICENSE.
 
 The default values for YEAR and LICENSE are the current year and GPLv3. 
 
-The license file contains placeholders for PROGRAMNAME, PROGRAMAUTHOR and YEAR. New licenses can be added by placing these keywords (if appropiate) in the respected license.
+The license file contains placeholders for PROGRAMNAME, PROGRAMAUTHOR and YEAR. New licenses can be added by placing these keywords (if appropiate) in a respective license file.
 
 Disclamer: Always check licenses downloaded from non official sources. They may have been altered by third parties and not hold real legal value. The author of the program is not responsible for using altered licenses with it. The program provides only a patter to personally add licenses.
 
